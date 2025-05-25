@@ -80,30 +80,28 @@ const TaskListPage = () => {
         </button>
       </div>
 
-      
       <div className="flex gap-4 mb-6">
         <select
-        value={statusFilter}
-        onChange={(e) => setStatusFilter(e.target.value)}
-        className="border border-gray-400 rounded px-3 py-2 text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="border border-gray-400 rounded px-3 py-2 text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-        <option value="all">All Statuses</option>
-        <option value="pending">Pending</option>
-        <option value="in progress">In Progress</option>
-        <option value="completed">Completed</option>
+          <option value="all">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="in progress">In Progress</option>
+          <option value="completed">Completed</option>
         </select>
 
         <select
-        value={priorityFilter}
-        onChange={(e) => setPriorityFilter(e.target.value)}
-        className="border border-gray-400 rounded px-3 py-2 text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={priorityFilter}
+          onChange={(e) => setPriorityFilter(e.target.value)}
+          className="border border-gray-400 rounded px-3 py-2 text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-        <option value="all">All Priorities</option>
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
+          <option value="all">All Priorities</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
         </select>
-
       </div>
 
       {filteredTasks.length === 0 ? (
@@ -113,49 +111,48 @@ const TaskListPage = () => {
           {filteredTasks.map((task) => (
             <div
               key={task._id}
-              className="bg-white border rounded p-4 shadow hover:bg-gray-50 transition relative"
+              className="bg-white border rounded p-4 shadow hover:bg-gray-50 transition"
             >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(task._id);
-                }}
-                className="absolute top-2 right-2 text-gray-500 hover:text-red-600"
-                title="Delete Task"
-              >
-                🗑️
-              </button>
-
-              <div
-                className="cursor-pointer"
-                onClick={() => router.push(`/tasks/${task._id}`)}
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={task.status === "completed"}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        handleToggleComplete(task);
-                      }}
-                      className="w-4 h-4 text-green-600"
-                    />
-                    <h2
-                      className={`text-lg font-semibold ${
-                        task.status === "completed" ? "line-through text-gray-500" : "text-gray-900"
-                      }`}
-                    >
+              <div className="flex justify-between items-start">
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={task.status === "completed"}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleToggleComplete(task);
+                    }}
+                    className="mt-1 w-4 h-4 accent-green-500"
+                  />
+                  <div>
+                    <h2 className={`text-lg font-semibold ${task.status === "completed" ? "line-through text-gray-500" : "text-gray-900"}`}>
                       {task.title}
                     </h2>
+                    <p className="text-gray-600 text-sm">{task.description}</p>
+                    <div className="text-sm text-gray-500 flex gap-4 mt-1">
+                      <span>Due: {task.dueDate?.substring(0, 10) || "N/A"}</span>
+                      <span className={getPriorityBadge(task.priority)}>{task.priority}</span>
+                      <span className={getStatusBadge(task.status)}>{task.status}</span>
+                    </div>
                   </div>
-                  <span className={getStatusBadge(task.status)}>{task.status}</span>
                 </div>
-
-                <p className="text-gray-600 mb-2">{task.description}</p>
-                <div className="text-sm text-gray-500 flex justify-between">
-                  <span>Due: {task.dueDate?.substring(0, 10) || "N/A"}</span>
-                  <span className={getPriorityBadge(task.priority)}>{task.priority}</span>
+                <div className="flex flex-col gap-2 items-end">
+                  <button
+                    onClick={() => router.push(`/tasks/${task._id}`)}
+                    className="text-sm text-blue-600 hover:underline"
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(task._id);
+                    }}
+                    className="text-sm text-red-500 hover:text-red-700"
+                  >
+                    🗑️
+                  </button>
                 </div>
               </div>
             </div>
